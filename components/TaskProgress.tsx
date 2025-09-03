@@ -19,13 +19,15 @@ const TaskProgress: React.FC<TaskProgressProps> = ({ completed, total }) => {
       <div className="w-full bg-slate-200 rounded-full h-2.5">
         <div
           className={`h-2.5 rounded-full transition-all duration-500 ease-out ${
-            allTasksCompleted ? 'bg-emerald-500' : 'bg-indigo-600'
+            // 変更点: プログレスバーの色
+            allTasksCompleted ? 'bg-amber-400' : 'bg-fuchsia-600'
           }`}
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
       {allTasksCompleted && (
-        <p className="text-center text-sm text-emerald-600 font-semibold mt-3">
+        // 変更点: 完了メッセージの色
+        <p className="text-center text-sm text-amber-600 font-semibold mt-3">
           素晴らしい！今日のタスクはすべて完了です！🎉
         </p>
       )}

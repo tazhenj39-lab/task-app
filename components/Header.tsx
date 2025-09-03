@@ -14,8 +14,9 @@ const NavButton: React.FC<{
   ariaLabel: string;
   children: React.ReactNode;
 }> = ({ isActive, onClick, ariaLabel, children }) => {
-  const baseClasses = "p-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-indigo-500";
-  const activeClasses = "bg-indigo-100 text-indigo-600";
+  const baseClasses = "p-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-fuchsia-500";
+  // 変更点: アクティブなボタンの色
+  const activeClasses = "bg-fuchsia-100 text-fuchsia-600";
   const inactiveClasses = "text-slate-500 hover:bg-slate-200 hover:text-slate-800";
 
   return (
@@ -36,10 +37,10 @@ const Header: React.FC<HeaderProps> = ({ view, setView }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <CalendarIcon className="h-8 w-8 text-indigo-500" />
+            {/* 変更点: アイコンの色 */}
+            <CalendarIcon className="h-8 w-8 text-fuchsia-500" />
             <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
               タスク管理アプリ
-
             </h1>
           </div>
           <nav className="flex items-center gap-2" aria-label="Main navigation">

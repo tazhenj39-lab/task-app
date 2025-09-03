@@ -50,7 +50,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition placeholder:text-slate-400"
+            // 変更点: フォーカス時のリングとボーダーの色
+            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition placeholder:text-slate-400"
             placeholder="例: プロジェクトのレポートを提出"
             required
           />
@@ -64,7 +65,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition placeholder:text-slate-400"
+            // 変更点: フォーカス時のリングとボーダーの色
+            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition placeholder:text-slate-400"
             placeholder="例: 最終稿を確認し、添付ファイルを準備"
           />
         </div>
@@ -78,7 +80,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
               id="dueDate"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              // 変更点: フォーカス時のリングとボーダーの色
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition"
               required
             />
           </div>
@@ -91,7 +94,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
               id="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              // 変更点: フォーカス時のリングとボーダーの色
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition"
               required
             />
           </div>
@@ -103,7 +107,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
               type="checkbox"
               checked={isRecurring}
               onChange={(e) => setIsRecurring(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              // 変更点: チェックボックスの色
+              className="h-4 w-4 rounded border-slate-300 text-fuchsia-600 focus:ring-fuchsia-500"
             />
             <label htmlFor="isRecurring" className="ml-2 block text-sm text-slate-600">
               毎日やるタスク
@@ -111,7 +116,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, selectedDate }) => {
           </div>
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-2.5 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-indigo-500 transition-transform transform active:scale-95"
+          // 変更点: ボタンの色
+          className="w-full flex items-center justify-center gap-2 bg-fuchsia-600 text-white font-semibold py-2.5 px-4 rounded-md hover:bg-fuchsia-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-fuchsia-500 transition-transform transform active:scale-95"
         >
           <PlusIcon className="w-5 h-5" />
           <span>タスクを追加</span>

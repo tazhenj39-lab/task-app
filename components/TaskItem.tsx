@@ -33,8 +33,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onToggle }) => {
         onClick={() => onToggle(id)}
         className={`mt-1 flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
           isCompleted
-            ? 'bg-indigo-600 border-indigo-600'
-            : 'border-slate-300 hover:border-indigo-500'
+            // 変更点: 完了時のボタンの色
+            ? 'bg-fuchsia-600 border-fuchsia-600'
+            : 'border-slate-300 hover:border-fuchsia-500'
         }`}
         aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
       >
@@ -44,7 +45,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onToggle }) => {
         <p className={`font-semibold text-slate-800 ${isCompleted ? 'line-through text-slate-400' : ''}`}>
           {title}
           {/* Fix: Wrap RepeatIcon in a span with a title attribute to fix a TypeScript error and provide a tooltip for accessibility. */}
-          {isRecurring && <span title="毎日やるタスク"><RepeatIcon className="inline-block w-4 h-4 ml-2 text-indigo-500" /></span>}
+          {/* 変更点: 繰り返しアイコンの色 */}
+          {isRecurring && <span title="毎日やるタスク"><RepeatIcon className="inline-block w-4 h-4 ml-2 text-fuchsia-500" /></span>}
         </p>
         <div className={`flex items-center flex-wrap gap-x-3 gap-y-1 text-sm mt-1 ${isCompleted ? 'text-slate-400' : 'text-slate-500'}`}>
             <div className="flex items-center gap-1.5">

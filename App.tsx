@@ -188,7 +188,8 @@ const App: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         <div 
-          className="flex w-[300%] h-full transition-transform duration-300 ease-in-out"
+          // 変更点: transition-transformの速度
+          className="flex w-[300%] h-full transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(${getTransformValue(view)})` }}
         >
           <div className="w-1/3 px-2 lg:px-4">

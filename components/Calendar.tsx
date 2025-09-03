@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Task } from '../types';
 import { ChevronLeftIcon, ChevronRightIcon, TrophyIcon, PencilIcon, CheckIcon, StarIcon } from './IconComponents';
@@ -36,7 +35,8 @@ const MonthlyGoal: React.FC<{
     <div className="mb-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <TrophyIcon className="w-5 h-5 text-indigo-500" />
+          {/* 変更点: アイコンの色をfuchsia-500に変更 */}
+          <TrophyIcon className="w-5 h-5 text-fuchsia-500" />
           <h4 className="font-semibold text-slate-800">今月自分がなりたい姿</h4>
         </div>
         {isEditing ? (
@@ -129,13 +129,15 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange, tasks, 
       const dailyTasks = tasksByDate[dateStr] || [];
 
       let dayClasses = "h-24 flex flex-col p-1.5 cursor-pointer relative transition-colors duration-200 border-b border-r border-slate-100";
-      dayClasses += isSelected ? " bg-indigo-50" : " bg-white hover:bg-slate-50";
+      dayClasses += isSelected ? " bg-fuchsia-50" : " bg-white hover:bg-slate-50";
 
       let dayNumberClasses = "w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium";
       if (isSelected) {
-        dayNumberClasses += " bg-indigo-600 text-white";
+        // 変更点: 選択された日付の色
+        dayNumberClasses += " bg-fuchsia-600 text-white";
       } else if (isToday) {
-        dayNumberClasses += " bg-indigo-100 text-indigo-600";
+        // 変更点: 今日の日付の色
+        dayNumberClasses += " bg-fuchsia-100 text-fuchsia-600";
       } else {
         dayNumberClasses += " text-slate-600";
       }
@@ -146,12 +148,14 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange, tasks, 
       days.push(
         <div key={day} className={dayClasses} onClick={() => onDateChange(date)}>
           {isStamped && (
+            // 変更点: 達成スタンプの色
             <StarIcon className="absolute top-1.5 right-1.5 w-5 h-5 text-amber-400" />
           )}
           <div className={dayNumberClasses}>{day}</div>
           <div className="mt-1 overflow-hidden flex-grow space-y-0.5">
             {dailyTasks.slice(0, 2).map(task => (
-              <div key={task.id} className="text-xs truncate px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800 font-medium">
+              // 変更点: タスクタイルの色
+              <div key={task.id} className="text-xs truncate px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 font-medium">
                 {task.title}
               </div>
             ))}

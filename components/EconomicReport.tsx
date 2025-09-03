@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
-import { ChartBarIcon } from './IconComponents';
+import { ChartBarIcon, LinkIcon } from './IconComponents';
 
 // Fix: Update GroundingChunk interface to match the @google/genai library types,
 // making the `web` property optional to resolve assignment errors.
@@ -23,21 +23,11 @@ const EconomicReport: React.FC = () => {
       setError(null);
       setSources([]);
       try {
-        // CRITICAL FIX: The application was crashing because `process` is not defined in a browser
-        // environment. This change safely accesses the API key.
-        const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
-
-        if (!apiKey) {
-            setError("APIキーが設定されていません。");
-            setIsLoading(false);
-            return;
-        }
-
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: '「keizaireport.com」の最新情報などを参考に、今日の経済市況を初心者にも分かりやすく、箇条書きで簡潔にまとめてください。',
+            contents: '今日の経済市況について、最新のニュースを参考に初心者にも分かりやすく箇条書きでまとめてください。',
             config: {
               tools: [{googleSearch: {}}],
             },
@@ -84,8 +74,11 @@ const EconomicReport: React.FC = () => {
     }
     
     return (
-      <div className="mt-4 pt-4 border-t border-slate-200">
-        <h4 className="text-sm font-semibold text-slate-500 mb-2">参考資料:</h4>
+      <div className="mt-6 pt-4 border-t border-slate-200">
+        <div className="flex items-center gap-2 mb-2">
+            <LinkIcon className="w-4 h-4 text-slate-500" />
+            <h4 className="text-sm font-semibold text-slate-600">参考にしたWebサイト</h4>
+        </div>
         <ul className="list-disc list-inside space-y-1">
           {validSources.map((source, index) => (
             <li key={index} className="text-sm text-indigo-600 truncate">
