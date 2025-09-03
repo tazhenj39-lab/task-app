@@ -1,4 +1,6 @@
 
+export type TaskTag = '仕事' | 'プライベート' | '学校' | 'その他';
+
 export interface Task {
   id: string;
   title: string;
@@ -7,4 +9,5 @@ export interface Task {
   time: string; // HH:MM
   isCompleted: boolean;
   isRecurring: boolean;
+  tag: TaskTag;
 }

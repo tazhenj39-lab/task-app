@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Task } from '../types';
+import { Task, TaskTag } from '../types';
 import { ChevronLeftIcon, ChevronRightIcon, TrophyIcon, PencilIcon, CheckIcon, StarIcon } from './IconComponents';
 
 interface CalendarProps {
@@ -68,6 +68,13 @@ const MonthlyGoal: React.FC<{
       </div>
     </div>
   );
+};
+
+const tagCalendarColors: Record<TaskTag, string> = {
+  '仕事': 'bg-blue-100 text-blue-800',
+  'プライベート': 'bg-green-100 text-green-800',
+  '学校': 'bg-yellow-100 text-yellow-800',
+  'その他': 'bg-gray-100 text-gray-800',
 };
 
 
@@ -153,12 +160,14 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange, tasks, 
           )}
           <div className={dayNumberClasses}>{day}</div>
           <div className="mt-1 overflow-hidden flex-grow space-y-0.5">
-            {dailyTasks.slice(0, 2).map(task => (
-              // 変更点: タスクタイルの色
-              <div key={task.id} className="text-xs truncate px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 font-medium">
-                {task.title}
-              </div>
-            ))}
+            {dailyTasks.slice(0, 2).map(task => {
+              const colorClass = tagCalendarColors[task.tag] || tagCalendarColors['その他'];
+              return (
+                <div key={task.id} className={`text-xs truncate px-1.5 py-0.5 rounded ${colorClass} font-medium`}>
+                  {task.title}
+                </div>
+              );
+            })}
             {dailyTasks.length > 2 && (
               <div className="text-xs text-slate-500 px-1 py-0.5 font-medium">
                 ...あと{dailyTasks.length - 2}件

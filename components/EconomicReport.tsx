@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { ChartBarIcon, LinkIcon } from './IconComponents';
 
-// Fix: Update GroundingChunk interface to match the @google/genai library types,
-// making the `web` property optional to resolve assignment errors.
 interface GroundingChunk {
   web?: {
     uri?: string;
@@ -27,7 +25,7 @@ const EconomicReport: React.FC = () => {
         
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: '今日の経済市況について、最新のニュースを参考に初心者にも分かりやすく箇条書きでまとめてください。',
+            contents: '最新のニュースに基づき、今日の主要なニュースと経済市況の概要を初心者にも分かりやすくレポートしてください。',
             config: {
               tools: [{googleSearch: {}}],
             },
@@ -37,7 +35,10 @@ const EconomicReport: React.FC = () => {
 
         const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
         if (groundingChunks) {
-          setSources(groundingChunks);
+           const validChunks: GroundingChunk[] = groundingChunks.filter(
+            (chunk: any): chunk is GroundingChunk => chunk.web && chunk.web.uri
+          );
+          setSources(validChunks);
         }
 
       } catch (err) {
@@ -53,47 +54,56 @@ const EconomicReport: React.FC = () => {
 
   const renderContent = () => {
     if (isLoading) {
-      return <p className="text-slate-500 text-center py-4">経済レポートを生成中...</p>;
+      return (
+        <div className="flex flex-col items-center justify-center py-10">
+          <div className="w-8 h-8 border-4 border-fuchsia-200 border-t-fuchsia-600 rounded-full animate-spin"></div>
+          <p className="text-slate-500 mt-4">ニュースと経済レポートを生成中...</p>
+        </div>
+      );
     }
     if (error) {
       return <p className="text-red-500 text-center py-4">{error}</p>;
     }
     return (
-      <div className="text-slate-600 space-y-2 text-sm whitespace-pre-wrap">
-         {report}
-      </div>
+      <ul className="text-slate-700 space-y-2 text-sm list-disc list-outside ml-4">
+         {report.split('\n').filter(line => line.trim() !== '').map((line, index) => {
+            const cleanedLine = line.replace(/^[\s*-]+/, '');
+            return <li key={index}>{cleanedLine}</li>
+         })}
+      </ul>
     );
   };
 
   const renderSources = () => {
-    // Fix: Filter out sources that do not have a web URI to ensure all links are valid.
-    const validSources = sources.filter(s => s.web?.uri);
-
-    if (validSources.length === 0) {
+    if (isLoading || sources.length === 0) {
       return null;
     }
     
     return (
       <div className="mt-6 pt-4 border-t border-slate-200">
-        <div className="flex items-center gap-2 mb-2">
-            <LinkIcon className="w-4 h-4 text-slate-500" />
-            <h4 className="text-sm font-semibold text-slate-600">参考にしたWebサイト</h4>
+        <div className="flex items-center gap-2 mb-3">
+            <LinkIcon className="w-5 h-5 text-slate-500" />
+            <h4 className="text-sm font-semibold text-slate-700">参照元サイト</h4>
         </div>
-        <ul className="list-disc list-inside space-y-1">
-          {validSources.map((source, index) => (
-            <li key={index} className="text-sm text-indigo-600 truncate">
-              <a 
-                href={source.web!.uri!} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:underline"
-                title={source.web!.title || source.web!.uri!}
-              >
+        <div className="space-y-2">
+          {sources.map((source, index) => (
+            <a 
+              key={index}
+              href={source.web!.uri!} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              title={source.web!.title || source.web!.uri!}
+              className="flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-fuchsia-50 border border-transparent hover:border-fuchsia-200 transition-all duration-200 group"
+            >
+              <div className="flex-shrink-0 w-8 h-8 bg-white rounded-md border border-slate-200 flex items-center justify-center group-hover:border-fuchsia-300">
+                <LinkIcon className="w-4 h-4 text-slate-400 group-hover:text-fuchsia-500"/>
+              </div>
+              <span className="text-sm text-fuchsia-800 font-medium truncate group-hover:underline">
                 {source.web!.title || source.web!.uri!}
-              </a>
-            </li>
+              </span>
+            </a>
           ))}
-        </ul>
+        </div>
       </div>
     );
   };
@@ -101,8 +111,8 @@ const EconomicReport: React.FC = () => {
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg border border-slate-200 mb-8">
       <div className="flex items-center gap-3 text-xl font-bold text-slate-800 mb-4 pb-2 border-b border-slate-200">
-        <ChartBarIcon className="w-6 h-6 text-indigo-500" />
-        <h3>今日の経済レポート</h3>
+        <ChartBarIcon className="w-6 h-6 text-fuchsia-500" />
+        <h3>今日のニュースと経済レポート</h3>
       </div>
       {renderContent()}
       {renderSources()}

@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const [monthlyGoals, setMonthlyGoals] = useState<Record<string, string>>({});
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [view, setView] = useState<View>('main');
+  const [notifiedTaskIds, setNotifiedTaskIds] = useState<Set<string>>(new Set());
 
   // For swipe gesture
   const touchStartX = useRef<number>(0);
@@ -42,6 +43,10 @@ const App: React.FC = () => {
       if (storedGoals) {
         setMonthlyGoals(JSON.parse(storedGoals));
       }
+      const storedNotifiedIds = localStorage.getItem('notifiedTaskIds');
+      if (storedNotifiedIds) {
+        setNotifiedTaskIds(new Set(JSON.parse(storedNotifiedIds)));
+      }
     } catch (error) {
       console.error("Failed to load data from local storage", error);
     }
@@ -51,10 +56,60 @@ const App: React.FC = () => {
     try {
       localStorage.setItem('tasks', JSON.stringify(tasks));
       localStorage.setItem('monthlyGoals', JSON.stringify(monthlyGoals));
+      localStorage.setItem('notifiedTaskIds', JSON.stringify(Array.from(notifiedTaskIds)));
     } catch (error) {
       console.error("Failed to save data to local storage", error);
     }
-  }, [tasks, monthlyGoals]);
+  }, [tasks, monthlyGoals, notifiedTaskIds]);
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('Notification permission granted.');
+          } else {
+            console.log('Notification permission denied.');
+          }
+        });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkTasksAndNotify = () => {
+      if (Notification.permission !== 'granted') {
+        return;
+      }
+
+      const now = new Date();
+      const thirtyMinutes = 30 * 60 * 1000;
+      
+      tasks.forEach(task => {
+        if (task.isCompleted || notifiedTaskIds.has(task.id)) {
+          return;
+        }
+
+        const dueDate = new Date(`${task.dueDate}T${task.time}`);
+        const timeUntilDue = dueDate.getTime() - now.getTime();
+
+        if (timeUntilDue > 0 && timeUntilDue <= thirtyMinutes) {
+          new Notification('タスクリマインダー', {
+            body: `「${task.title}」の時間が30分後に迫っています。`,
+            icon: '/vite.svg',
+          });
+          
+          setNotifiedTaskIds(prevIds => new Set(prevIds).add(task.id));
+        }
+      });
+    };
+
+    const intervalId = setInterval(checkTasksAndNotify, 60 * 1000);
+    checkTasksAndNotify();
+
+    return () => clearInterval(intervalId);
+  }, [tasks, notifiedTaskIds]);
+
 
   const handleAddTask = useCallback((taskData: Omit<Task, 'id' | 'isCompleted'>) => {
     const newTask: Task = {
@@ -71,6 +126,11 @@ const App: React.FC = () => {
 
   const handleDeleteTask = useCallback((id: string) => {
     setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+    setNotifiedTaskIds(prevIds => {
+      const newIds = new Set(prevIds);
+      newIds.delete(id);
+      return newIds;
+    });
   }, []);
 
   const handleToggleTask = useCallback((id:string) => {
@@ -98,6 +158,8 @@ const App: React.FC = () => {
           time: updatedTask.time,
           isCompleted: false,
           isRecurring: true,
+          // FIX: Add missing 'tag' property.
+          tag: updatedTask.tag,
         };
         newTasks.push(recurringTask);
       }
