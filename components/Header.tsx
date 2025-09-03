@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { View } from '../App';
-import { CalendarIcon, ListBulletIcon, ChartBarIcon } from './IconComponents';
+import { CalendarIcon, ListBulletIcon, ChartBarIcon, TrophyIcon } from './IconComponents';
 
 interface HeaderProps {
   view: View;
@@ -15,9 +14,8 @@ const NavButton: React.FC<{
   children: React.ReactNode;
 }> = ({ isActive, onClick, ariaLabel, children }) => {
   const baseClasses = "p-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-fuchsia-500";
-  // 変更点: アクティブなボタンの色
-  const activeClasses = "bg-fuchsia-100 text-fuchsia-600";
-  const inactiveClasses = "text-slate-500 hover:bg-slate-200 hover:text-slate-800";
+  const activeClasses = "bg-fuchsia-100 text-fuchsia-700";
+  const inactiveClasses = "text-slate-400 hover:bg-slate-100 hover:text-slate-700";
 
   return (
     <button
@@ -33,12 +31,11 @@ const NavButton: React.FC<{
 
 const Header: React.FC<HeaderProps> = ({ view, setView }) => {
   return (
-    <header className="bg-white/80 backdrop-blur-lg sticky top-0 z-10 border-b border-slate-200/70">
+    <header className="bg-white/80 backdrop-blur-lg sticky top-0 z-10 border-b border-slate-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* 変更点: アイコンの色 */}
-            <CalendarIcon className="h-8 w-8 text-fuchsia-500" />
+            <CalendarIcon className="h-8 w-8 text-fuchsia-600" />
             <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
               タスク管理アプリ
             </h1>
@@ -64,6 +61,13 @@ const Header: React.FC<HeaderProps> = ({ view, setView }) => {
               ariaLabel="経済レポート画面"
             >
               <ChartBarIcon className="w-6 h-6"/>
+            </NavButton>
+            <NavButton 
+              isActive={view === 'tennis'}
+              onClick={() => setView('tennis')}
+              ariaLabel="テニス大会結果"
+            >
+              <TrophyIcon className="w-6 h-6"/>
             </NavButton>
           </nav>
         </div>

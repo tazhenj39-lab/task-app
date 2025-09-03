@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Task } from '../types';
+import { Task, TaskTag } from '../types';
 import { TrashIcon, CheckIcon, ClockIcon, RepeatIcon } from './IconComponents';
 
 interface TaskItemProps {
@@ -8,11 +8,11 @@ interface TaskItemProps {
   onToggle: (id: string) => void;
 }
 
-const tagColors: Record<string, string> = {
+const tagColors: Record<TaskTag, string> = {
   '仕事': 'bg-blue-100 text-blue-800',
   'プライベート': 'bg-green-100 text-green-800',
   '学校': 'bg-yellow-100 text-yellow-800',
-  'その他': 'bg-gray-100 text-gray-800',
+  'その他': 'bg-slate-100 text-slate-800',
 };
 
 
@@ -51,7 +51,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onToggle }) => {
               {title}
               {isRecurring && <span title="毎日やるタスク"><RepeatIcon className="inline-block w-4 h-4 ml-2 text-fuchsia-500" /></span>}
             </p>
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${tagClass}`}>
+            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${tagClass} animate-tag-appear`}>
               {tag}
             </span>
         </div>

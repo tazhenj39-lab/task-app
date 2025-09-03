@@ -8,12 +8,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* 変更点: bodyのフォントを更新 */
     body {
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
     @keyframes glow-animation {
       0% {
@@ -25,6 +23,19 @@
     }
     .glow-on-complete {
       animation: glow-animation 1.5s ease-out forwards;
+    }
+    @keyframes tag-appear {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .animate-tag-appear {
+      animation: tag-appear 0.3s ease-out forwards;
     }
 </style>
   <script type="importmap">
@@ -39,7 +50,4 @@
   </script>
 </head>
 <body class="bg-slate-100 text-slate-800">
-  <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
-</html>
+  <div id
