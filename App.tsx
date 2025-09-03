@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Task } from './types';
 import Calendar from './components/Calendar';
 import TaskForm from './components/TaskForm';
-import ScheduleView from './components/ScheduleView';
 import Header from './components/Header';
 import EconomicReport from './components/EconomicReport';
-import TennisResults from './components/TennisResults';
 import TaskList from './components/TaskList';
+import TennisResults from './components/TennisResults';
 
 const toYYYYMMDD = (date: Date): string => {
   const year = date.getFullYear();
@@ -15,13 +14,13 @@ const toYYYYMMDD = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-export type View = 'main' | 'today' | 'report' | 'tennis';
+export type View = 'calendar' | 'tasks' | 'report' | 'tennis';
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [monthlyGoals, setMonthlyGoals] = useState<Record<string, string>>({});
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [view, setView] = useState<View>('main');
+  const [view, setView] = useState<View>('calendar');
   const [notifiedTaskIds, setNotifiedTaskIds] = useState<Set<string>>(new Set());
 
   // For swipe gesture
@@ -86,7 +85,7 @@ const App: React.FC = () => {
       });
     };
 
-    const intervalId = setInterval(checkTasks, 60 * 1000); // Check every minute
+    const intervalId = setInterval(checkTasks, 60 * 1000);
     return () => clearInterval(intervalId);
   }, [tasks, notifiedTaskIds]);
 
@@ -131,6 +130,7 @@ const App: React.FC = () => {
             id: crypto.randomUUID(),
             dueDate: nextDueDate,
             isCompleted: false,
+            tag: task.tag,
           };
           newTasks.push(nextRecurringTask);
         }
@@ -156,7 +156,7 @@ const App: React.FC = () => {
   const completedTasks = useMemo(() => tasks.filter(task => task.dueDate === selectedDateStr && task.isCompleted), [tasks, selectedDateStr]);
   const allTodaysTasksCount = todaysTasks.length + completedTasks.length;
 
-  const viewOrder: View[] = ['main', 'today', 'report', 'tennis'];
+  const viewOrder: View[] = ['calendar', 'tasks', 'report', 'tennis'];
   const currentViewIndex = viewOrder.indexOf(view);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -168,12 +168,12 @@ const App: React.FC = () => {
   };
   
   const handleTouchEnd = () => {
-    if (touchStartX.current - touchEndX.current > 75) { // Swiped left
+    if (touchStartX.current - touchEndX.current > 75) {
       const nextIndex = Math.min(viewOrder.length - 1, currentViewIndex + 1);
       setView(viewOrder[nextIndex]);
     }
   
-    if (touchStartX.current - touchEndX.current < -75) { // Swiped right
+    if (touchStartX.current - touchEndX.current < -75) {
       const prevIndex = Math.max(0, currentViewIndex - 1);
       setView(viewOrder[prevIndex]);
     }
@@ -204,19 +204,23 @@ const App: React.FC = () => {
           className="flex transition-transform duration-300 ease-in-out"
           style={{ transform: `translateX(-${currentViewIndex * 100}%)`, width: '400%' }}
         >
-          <div className="w-1/4 px-2">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div>
+          {/* Calendar View */}
+          <div className="w-1/4 px-2 h-[calc(100vh-120px)] overflow-y-auto">
+             <div className="space-y-8 max-w-2xl mx-auto">
                 <Calendar 
-                  selectedDate={selectedDate} 
-                  onDateChange={setSelectedDate} 
-                  tasks={tasks}
-                  monthlyGoals={monthlyGoals}
-                  onSetGoal={handleSetGoal}
-                  stampedDates={stampedDates}
+                    selectedDate={selectedDate} 
+                    onDateChange={setSelectedDate} 
+                    tasks={tasks}
+                    monthlyGoals={monthlyGoals}
+                    onSetGoal={handleSetGoal}
+                    stampedDates={stampedDates}
                 />
               </div>
-              <div className="space-y-8">
+          </div>
+          
+           {/* Tasks View */}
+          <div className="w-1/4 px-2 h-[calc(100vh-120px)] overflow-y-auto">
+             <div className="space-y-8 max-w-2xl mx-auto">
                 <TaskForm onAddTask={handleAddTask} selectedDate={selectedDate} />
                 <TaskList
                   title={`${selectedDate.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' })} のタスク`}
@@ -227,18 +231,15 @@ const App: React.FC = () => {
                   totalTasksCount={allTodaysTasksCount}
                 />
               </div>
-            </div>
           </div>
 
-          <div className="w-1/4 px-2 h-[calc(100vh-120px)]">
-            <ScheduleView tasks={tasks} onToggle={handleToggleTask} onDelete={handleDeleteTask} />
-          </div>
-
-          <div className="w-1/4 px-2">
+          {/* Report View */}
+          <div className="w-1/4 px-2 h-[calc(100vh-120px)] overflow-y-auto">
             <EconomicReport />
           </div>
-
-          <div className="w-1/4 px-2">
+          
+          {/* Tennis Results View */}
+          <div className="w-1/4 px-2 h-[calc(100vh-120px)] overflow-y-auto">
             <TennisResults />
           </div>
         </div>

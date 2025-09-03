@@ -148,7 +148,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange, tasks, 
       }
       
       const dayOfWeek = (firstDay + day - 1) % 7;
-      if (dayOfWeek === 0) dayClasses += " border-l border-slate-200"; // Sunday
+      if (dayOfWeek === 0) dayClasses += " border-l border-slate-200";
 
       days.push(
         <div key={day} className={dayClasses} onClick={() => onDateChange(date)}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from '../App';
-import { CalendarIcon, ListBulletIcon, ChartBarIcon, TrophyIcon } from './IconComponents';
+import { CalendarIcon, ChartBarIcon, TrophyIcon, ListBulletIcon } from './IconComponents';
 
 interface HeaderProps {
   view: View;
@@ -42,23 +42,23 @@ const Header: React.FC<HeaderProps> = ({ view, setView }) => {
           </div>
           <nav className="flex items-center gap-2" aria-label="Main navigation">
             <NavButton 
-              isActive={view === 'main'}
-              onClick={() => setView('main')}
-              ariaLabel="カレンダーとタスク入力画面"
+              isActive={view === 'calendar'}
+              onClick={() => setView('calendar')}
+              ariaLabel="カレンダー"
             >
               <CalendarIcon className="w-6 h-6"/>
             </NavButton>
             <NavButton 
-              isActive={view === 'today'}
-              onClick={() => setView('today')}
-              ariaLabel="スケジュール画面"
+              isActive={view === 'tasks'}
+              onClick={() => setView('tasks')}
+              ariaLabel="タスクリスト"
             >
               <ListBulletIcon className="w-6 h-6"/>
             </NavButton>
              <NavButton 
               isActive={view === 'report'}
               onClick={() => setView('report')}
-              ariaLabel="経済レポート画面"
+              ariaLabel="ニュースと経済レポート"
             >
               <ChartBarIcon className="w-6 h-6"/>
             </NavButton>
